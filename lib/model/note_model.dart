@@ -13,11 +13,13 @@ class NoteModel extends HiveObject {
   int color;
   @HiveField(4)
   String image;
+  @HiveField(5)
+  bool status;
 
 
   NoteModel(
       {required this.title,
       required this.date,
       required this.subTitle,
-      required this.color,required this.image});
+      required this.color,required this.image,required this.status});
 }

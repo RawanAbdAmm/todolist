@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-enum SingingCharacter { completed, uncompleted }
+enum status { completed, uncompleted }
 
 class Radiowidget extends StatefulWidget {
   const Radiowidget({super.key, required this.onValueChanged});
-  final void Function(SingingCharacter) onValueChanged;
+  final void Function(status) onValueChanged;
 
   @override
   State<Radiowidget> createState() => _RadioState();
 }
 
 class _RadioState extends State<Radiowidget> {
-  SingingCharacter? _character = SingingCharacter.uncompleted;
+  status? _character = status.uncompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class _RadioState extends State<Radiowidget> {
       children: [
         ListTile(
           title: const Text('Completed'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.completed,
+          leading: Radio<status>(
+            value: status.completed,
             groupValue: _character,
-            onChanged: (SingingCharacter? value) {
+            onChanged: (status? value) {
               setState(() {
                 _character = value;
               });
@@ -31,10 +31,10 @@ class _RadioState extends State<Radiowidget> {
         ),
         ListTile(
           title: const Text('Uncompleted'),
-          leading: Radio<SingingCharacter>(
-            value: SingingCharacter.uncompleted,
+          leading: Radio<status>(
+            value: status.uncompleted,
             groupValue: _character,
-            onChanged: (SingingCharacter? value) {
+            onChanged: (status? value) {
               setState(() {
                 _character = value;
               });

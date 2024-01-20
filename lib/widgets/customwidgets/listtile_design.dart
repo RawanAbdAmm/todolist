@@ -12,16 +12,20 @@ class ListtileDesign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return Column(children: [
       // CircleAvatar(child: Image(image: AssetImage(note.image)),),
-
+      Text(
+        note.status == true ? 'Completed Task' : 'Not Completed',
+        style: const TextStyle(
+          color: Colors.black,
+        ),
+      ),
       ListTile(
         title: Text(
           note.title,
           style: const TextStyle(
               fontSize: 26, color: Colors.black, fontWeight: FontWeight.bold),
         ),
-        // leading: Text('${note.isCompleted}',style:const TextStyle(color:Colors.black),),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 16.0, bottom: 16),
           child: Text(

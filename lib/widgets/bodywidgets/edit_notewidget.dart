@@ -19,7 +19,7 @@ class EditNoteBody extends StatefulWidget {
 }
 
 class _EditNoteBodyState extends State<EditNoteBody> {
-  SingingCharacter? selectedValue;
+  status? selectedValue;
 
   String? title, content;
 

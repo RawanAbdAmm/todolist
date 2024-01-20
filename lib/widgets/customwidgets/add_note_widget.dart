@@ -8,6 +8,8 @@ import 'package:notes_app/widgets/customwidgets/color_listview.dart';
 import 'package:notes_app/widgets/customwidgets/custom_button.dart';
 import 'package:notes_app/widgets/customwidgets/custom_text_field.dart';
 
+enum SingingCharacter { completed, uncompleted }
+
 class AddNoteWidget extends StatefulWidget {
   const AddNoteWidget({
     super.key,
@@ -20,7 +22,7 @@ class AddNoteWidget extends StatefulWidget {
 class _AddNoteWidgetState extends State<AddNoteWidget> {
   final GlobalKey<FormState> formkey = GlobalKey();
   String? title, content, image;
-  SingingCharacter? selectedValue = SingingCharacter.uncompleted;
+  bool isCompleted = false;
 
   AutovalidateMode autovalidate = AutovalidateMode.disabled;
 
@@ -54,24 +56,27 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
             height: 26,
           ),
           CustomTextField(
-            onsaved: (data) {
-              image = data;
-            },
-            text: 'image'
-          ),
-       
+              onsaved: (data) {
+                image = data;
+              },
+              text: 'image'),
           const SizedBox(
             height: 26,
           ),
-          const ColorListview(),
-          Radiowidget(
-            onValueChanged: (value) {
-              setState(() {
-                selectedValue = value;
-              });
-              print(selectedValue);
-            },
+          Row(
+            children: [
+              Checkbox(
+                value: isCompleted,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isCompleted = value != null ? value : false;
+                  });
+                },
+              ),
+              Text('Task Completed'),
+            ],
           ),
+          const ColorListview(),
           const SizedBox(
             height: 70,
           ),
@@ -90,8 +95,8 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
                         subTitle: content!,
                         date: formattedCurrentDate,
                         image: image!,
-                        // isCompleted: selectedValue,
-                        color: Colors.black.value);
+                        color: Colors.black.value,
+                        status: isCompleted);
                     BlocProvider.of<AddNoteCubit>(context).addNote(notemodel);
                   } else {
                     autovalidate = AutovalidateMode.always;

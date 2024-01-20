@@ -22,6 +22,7 @@ class NoteModelAdapter extends TypeAdapter<NoteModel> {
       subTitle: fields[2] as String,
       color: fields[3] as int,
       image: fields[4] as String,
+      status: fields[5] as bool,
     );
   }
 
@@ -39,7 +40,8 @@ class NoteModelAdapter extends TypeAdapter<NoteModel> {
       ..write(obj.color)
       ..writeByte(4)
       ..write(obj.image)
-     ;
+      ..writeByte(5)
+      ..write(obj.status);
   }
 
   @override
