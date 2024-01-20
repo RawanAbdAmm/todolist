@@ -93,7 +93,7 @@ class _EditNoteBodyState extends State<EditNoteBody> {
                 : Container(),
             ElevatedButton(
               onPressed: _getImage,
-              child: Text('Take Photo'),
+              child:const Text('Take Photo'),
             ),
             Row(
               children: [
