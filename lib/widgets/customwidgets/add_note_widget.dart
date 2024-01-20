@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_app/cubits/add_note/add_note_cubit.dart';
 import 'package:notes_app/model/note_model.dart';
-import 'package:notes_app/widgets/customwidgets/checkbox.dart';
 import 'package:notes_app/widgets/customwidgets/color_listview.dart';
 import 'package:notes_app/widgets/customwidgets/custom_button.dart';
 import 'package:notes_app/widgets/customwidgets/custom_text_field.dart';
@@ -23,8 +25,18 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
   final GlobalKey<FormState> formkey = GlobalKey();
   String? title, content, image;
   bool isCompleted = false;
-
+  late File? _image = null;
   AutovalidateMode autovalidate = AutovalidateMode.disabled;
+  Future<void> _getImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +67,16 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
           const SizedBox(
             height: 26,
           ),
-          CustomTextField(
-              onsaved: (data) {
-                image = data;
-              },
-              text: 'image'),
+          _image != null
+              ? Image.file(
+                  _image!,
+                  height: 100,
+                )
+              : Container(),
+          ElevatedButton(
+            onPressed: _getImage,
+            child: Text('Take Photo'),
+          ),
           const SizedBox(
             height: 26,
           ),
@@ -94,7 +111,8 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
                         title: title!,
                         subTitle: content!,
                         date: formattedCurrentDate,
-                        image: image!,
+                        image:
+                            _image?.path ?? '', // Use image path if available
                         color: Colors.black.value,
                         status: isCompleted);
                     BlocProvider.of<AddNoteCubit>(context).addNote(notemodel);

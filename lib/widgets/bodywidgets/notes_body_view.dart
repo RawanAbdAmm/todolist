@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_app/cubits/read_note/read_notes_cubit.dart';
@@ -6,12 +7,11 @@ import 'package:notes_app/widgets/customwidgets/custom_appbar.dart';
 
 class NotesViewBody extends StatefulWidget {
   const NotesViewBody({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<NotesViewBody> createState() => _NotesViewBodyState();
-
 }
 
 class _NotesViewBodyState extends State<NotesViewBody> {
@@ -19,21 +19,41 @@ class _NotesViewBodyState extends State<NotesViewBody> {
   void initState() {
     BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
     super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        // User signed out
+        print("User signed out");
+      } else {
+        // User signed in
+        print("User signed in: ${user.uid}");
+      }
+    });
   }
+
+  Future<void> _signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print("Error signing out: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  const Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
       child: Column(
         children: [
-          SizedBox(
+         const SizedBox(
             height: 20,
           ),
           CustomAppbar(
             title: '  To Do list',
-            icon: Icon(Icons.search_outlined),
+
+            icon: const Icon(Icons.exit_to_app), // Sign-out icon
+            onpressed: _signOut,
           ),
-          SizedBox(
+         const SizedBox(
             height: 30,
           ),
           Expanded(child: NotesListview()),

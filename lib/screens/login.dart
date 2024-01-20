@@ -25,6 +25,8 @@ class _LoginPage extends State<LoginPage> {
   String? email, password;
   @override
   Widget build(BuildContext context) {
+   
+
     final width = MediaQuery.of(context).size.width;
 
     return ModalProgressHUD(
@@ -43,13 +45,13 @@ class _LoginPage extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Login ',
+                              'Log ',
                               style: TextStyle(
                                 fontSize: 40,
                               ),
                             ),
                             Text(
-                              'Up',
+                              'in',
                               style: TextStyle(
                                   fontSize: 40,
                                   color: Color.fromARGB(255, 57, 152, 231)),
@@ -177,17 +179,17 @@ class _LoginPage extends State<LoginPage> {
                           height: 50,
                         ),
                         ElevatedButton(
-                          
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                   const Color.fromARGB(255, 57, 152, 231)),
+                                    const Color.fromARGB(255, 57, 152, 231)),
                             onPressed: () async {
                               if (formKey.currentState!.validate()) {
                                 String errorMessage = '';
 
                                 try {
                                   await ();
-                                  Navigator.pushReplacementNamed(context, HomePage.id,
+                                  Navigator.pushReplacementNamed(
+                                      context, HomePage.id,
                                       arguments: email);
                                   isLoading = true;
                                   setState(() {});
