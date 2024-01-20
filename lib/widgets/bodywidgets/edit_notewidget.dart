@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:notes_app/cubits/read_note/read_notes_cubit.dart';
 import 'package:notes_app/model/note_model.dart';
 import 'package:notes_app/widgets/customwidgets/checkbox.dart';
@@ -20,11 +23,23 @@ class EditNoteBody extends StatefulWidget {
 
 class _EditNoteBodyState extends State<EditNoteBody> {
   bool? isCompleted;
+  late File? _image = null;
 
   String? title, content;
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _getImage() async {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
       child: SingleChildScrollView(
@@ -38,6 +53,7 @@ class _EditNoteBodyState extends State<EditNoteBody> {
                 widget.note.title = title ?? widget.note.title;
                 widget.note.subTitle = content ?? widget.note.subTitle;
                 widget.note.status = isCompleted ?? widget.note.status;
+                widget.note.image=_image!.path??widget.note.image;
                 widget.note.save();
                 BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
                 Navigator.pop(context);
@@ -67,11 +83,20 @@ class _EditNoteBodyState extends State<EditNoteBody> {
             const SizedBox(
               height: 25,
             ),
+            _image != null
+                ? Image.file(
+                    _image!,
+                    height: 100,
+                  )
+                : Container(),
+            ElevatedButton(
+              onPressed: _getImage,
+              child: Text('Take Photo'),
+            ),
             Row(
               children: [
                 Checkbox(
-                  value: isCompleted ??
-                      widget.note.status, 
+                  value: isCompleted ?? widget.note.status,
                   onChanged: (bool? value) {
                     setState(() {
                       isCompleted = value;
