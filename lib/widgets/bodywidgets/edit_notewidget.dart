@@ -53,7 +53,9 @@ class _EditNoteBodyState extends State<EditNoteBody> {
                 widget.note.title = title ?? widget.note.title;
                 widget.note.subTitle = content ?? widget.note.subTitle;
                 widget.note.status = isCompleted ?? widget.note.status;
-                widget.note.image=_image!.path??widget.note.image;
+                widget.note.image=_image == null
+                    ? widget.note.image
+                    : _image!.path;
                 widget.note.save();
                 BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
                 Navigator.pop(context);
