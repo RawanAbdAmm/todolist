@@ -19,7 +19,7 @@ class EditNoteBody extends StatefulWidget {
 }
 
 class _EditNoteBodyState extends State<EditNoteBody> {
-  status? selectedValue;
+  bool? isCompleted;
 
   String? title, content;
 
@@ -37,8 +37,7 @@ class _EditNoteBodyState extends State<EditNoteBody> {
               onpressed: () {
                 widget.note.title = title ?? widget.note.title;
                 widget.note.subTitle = content ?? widget.note.subTitle;
-                // widget.note.isCompleted =
-                //     selectedValue ?? widget.note.isCompleted;
+                widget.note.status = isCompleted ?? widget.note.status;
                 widget.note.save();
                 BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
                 Navigator.pop(context);
@@ -68,13 +67,20 @@ class _EditNoteBodyState extends State<EditNoteBody> {
             const SizedBox(
               height: 25,
             ),
-            Radiowidget(
-              onValueChanged: (value) {
-                setState(() {
-                  selectedValue = value;
-                });
-                print(selectedValue);
-              },
+            Row(
+              children: [
+                Checkbox(
+                  value: isCompleted ??
+                      widget.note.status, 
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isCompleted = value;
+                    });
+                  },
+                ),
+                Text(
+                    isCompleted == true ? 'Task Completed' : 'Task Incomplete'),
+              ],
             ),
             EditNotColorListview(
               note: widget.note,
