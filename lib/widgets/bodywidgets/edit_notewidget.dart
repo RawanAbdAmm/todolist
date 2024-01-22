@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notes_app/cubits/read_note/read_notes_cubit.dart';
 import 'package:notes_app/model/note_model.dart';
-import 'package:notes_app/widgets/customwidgets/checkbox.dart';
 import 'package:notes_app/widgets/customwidgets/custom_appbar.dart';
 import 'package:notes_app/widgets/customwidgets/custom_text_field.dart';
 import 'package:notes_app/widgets/customwidgets/edit_colorlist.dart';
@@ -56,7 +55,7 @@ class _EditNoteBodyState extends State<EditNoteBody> {
                 widget.note.image=_image == null
                     ? widget.note.image
                     : _image!.path;
-                widget.note.save();
+                // widget.note.save();
                 BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
                 Navigator.pop(context);
               },

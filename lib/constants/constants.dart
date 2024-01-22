@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 const  kprimarycolor=Color(0xff62FCD7);
-const knotesbox='Notte_boxes';
  List<Color> colors = const [
     Color(0xffDBCFB0),
     Color(0xffBFC8AD),
@@ -10,3 +9,6 @@ const knotesbox='Notte_boxes';
     Color(0xff545775),
     Color(0xff22243C),
   ];
+  const messageCollections='Messages';
+const kmessage='message';
+const kcreatedAt='createdAt';

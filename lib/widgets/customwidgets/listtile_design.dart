@@ -27,6 +27,7 @@ class ListtileDesign extends StatelessWidget {
                 image: DecorationImage(
                   image: FileImage(File(note.image)),
                   fit: BoxFit.cover,
+                  
                 ),
               ),
             ),
@@ -45,24 +46,24 @@ class ListtileDesign extends StatelessWidget {
           title: Text(
             note.title,
             style: const TextStyle(
-                fontSize: 26, color: Colors.black, fontWeight: FontWeight.bold),
+                fontSize: 26, color: Color.fromARGB(133, 189, 111, 111), fontWeight: FontWeight.bold),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 16.0, bottom: 16),
             child: Text(
               note.subTitle,
               style: const TextStyle(
-                  fontSize: 18, color: Color.fromARGB(124, 0, 0, 0)),
+                  fontSize: 18, color: Color.fromARGB(133, 189, 111, 111)),
             ),
           ),
           trailing: IconButton(
             onPressed: () {
-              note.delete();
+              // note.delete();
               BlocProvider.of<ReadNotesCubit>(context).readAllNotes();
             },
             icon: const Icon(
               Icons.delete,
-              color: Colors.black,
+              color: Color.fromARGB(133, 189, 111, 111),
               size: 27,
             ),
           ),

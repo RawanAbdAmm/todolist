@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
       
-        TextButton(onPressed:onpressed, child: Text('Add'))
+        TextButton(onPressed:onpressed, child:const Text('Add'))
       ],
     );
   }

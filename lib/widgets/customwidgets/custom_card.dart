@@ -39,7 +39,7 @@ class NoteItem extends StatelessWidget {
                 child: Text(
                   note.date,
                   style: const TextStyle(
-                      color: Color.fromARGB(134, 0, 0, 0), fontSize: 16),
+                      color: Color.fromARGB(133, 189, 111, 111), fontSize: 16),
                 ),
               )
             ],

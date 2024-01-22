@@ -9,13 +9,11 @@ import 'package:notes_app/model/note_model.dart';
 import 'package:notes_app/widgets/customwidgets/color_listview.dart';
 import 'package:notes_app/widgets/customwidgets/custom_button.dart';
 import 'package:notes_app/widgets/customwidgets/custom_text_field.dart';
-
-enum SingingCharacter { completed, uncompleted }
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddNoteWidget extends StatefulWidget {
-  const AddNoteWidget({
-    super.key,
-  });
+  const AddNoteWidget({Key? key}) : super(key: key);
 
   @override
   State<AddNoteWidget> createState() => _AddNoteWidgetState();
@@ -25,8 +23,12 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
   final GlobalKey<FormState> formkey = GlobalKey();
   String? title, content, image;
   bool isCompleted = false;
-  late File? _image = null;
+   File? _image;
   AutovalidateMode autovalidate = AutovalidateMode.disabled;
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<void> _getImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
@@ -38,6 +40,19 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
     }
   }
 
+  Future<void> _addNoteToFirestore(NoteModel noteModel) async {
+    String? userId = _auth.currentUser?.uid;
+
+    await _firestore.collection('users').doc(userId).collection('notes').add({
+      'title': noteModel.title,
+      'subTitle': noteModel.subTitle,
+      'date': noteModel.date,
+      'image': noteModel.image,
+      'color': noteModel.color,
+      'status': noteModel.status,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -45,18 +60,14 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
       autovalidateMode: autovalidate,
       child: Column(
         children: [
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           CustomTextField(
             onsaved: (data) {
               title = data;
             },
             text: 'title',
           ),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           CustomTextField(
             onsaved: (data) {
               content = data;
@@ -64,9 +75,7 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
             text: 'content',
             maxlines: 5,
           ),
-          const SizedBox(
-            height: 26,
-          ),
+          const SizedBox(height: 26),
           _image != null
               ? Image.file(
                   _image!,
@@ -75,46 +84,46 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
               : Container(),
           ElevatedButton(
             onPressed: _getImage,
-            child: Text('Take Photo'),
+            child:const Text('Take Photo'),
           ),
-          const SizedBox(
-            height: 26,
-          ),
+          const SizedBox(height: 26),
           Row(
             children: [
               Checkbox(
                 value: isCompleted,
                 onChanged: (bool? value) {
                   setState(() {
-                    isCompleted = value != null ? value : false;
+                    isCompleted = value ?? false;
                   });
                 },
               ),
-              Text('Task Completed'),
+             const Text('Task Completed'),
             ],
           ),
           const ColorListview(),
-          const SizedBox(
-            height: 70,
-          ),
+          const SizedBox(height: 70),
           BlocBuilder<AddNoteCubit, AddNoteState>(
             builder: (context, state) {
               return CustomButton(
-                isLoading: state is AddNoteLoading ? true : false,
-                onpressed: () {
+                isLoading: state is AddNoteLoading,
+                onpressed: () async {
                   if (formkey.currentState!.validate()) {
                     formkey.currentState!.save();
                     var currentDate = DateTime.now();
                     var formattedCurrentDate =
                         DateFormat.yMEd().format(currentDate);
                     var notemodel = NoteModel(
-                        title: title!,
-                        subTitle: content!,
-                        date: formattedCurrentDate,
-                        image:
-                            _image?.path ?? '', // Use image path if available
-                        color: Colors.black.value,
-                        status: isCompleted);
+                      title: title!,
+                      subTitle: content!,
+                      date: formattedCurrentDate,
+                      image: _image?.path ?? '',
+                      color: Colors.black.value,
+                      status: isCompleted,
+                    );
+
+                    await _addNoteToFirestore(notemodel);
+
+                    // After adding the note to Firestore, you can also dispatch a Bloc event if needed
                     BlocProvider.of<AddNoteCubit>(context).addNote(notemodel);
                   } else {
                     autovalidate = AutovalidateMode.always;
@@ -124,9 +133,7 @@ class _AddNoteWidgetState extends State<AddNoteWidget> {
               );
             },
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
         ],
       ),
     );

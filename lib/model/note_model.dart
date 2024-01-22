@@ -1,25 +1,30 @@
-import 'package:hive/hive.dart';
-part 'note_model.g.dart';
 
-@HiveType(typeId: 0)
-class NoteModel extends HiveObject {
-  @HiveField(0)
-  String title;
-  @HiveField(1)
+class NoteModel {
+   String title;
+   String subTitle;
   final String date;
-  @HiveField(2)
-  String subTitle;
-  @HiveField(3)
-  int color;
-  @HiveField(4)
-  String image;
-  @HiveField(5)
-  bool status;
+   String image;
+   int color;
+   bool status;
 
+  NoteModel({
+    required this.title,
+    required this.subTitle,
+    required this.date,
+    required this.image,
+    required this.color,
+    required this.status,
+  });
 
-  NoteModel(
-      {required this.title,
-      required this.date,
-      required this.subTitle,
-      required this.color,required this.image,required this.status});
+  // Factory method to convert Firestore data to NoteModel
+  factory NoteModel.fromFirestore(Map<String, dynamic> data) {
+    return NoteModel(
+      title: data['title'],
+      subTitle: data['subTitle'],
+      date: data['date'],
+      image: data['image'],
+      color: data['color'],
+      status: data['status'],
+    );
+  }
 }
